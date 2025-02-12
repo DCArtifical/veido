@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频会议终端部署情况看板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+            padding: 20px;
+            background: #eef2ff;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .coverage-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .coverage-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .coverage-card:nth-child(1) {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        }
+
+        .coverage-card:nth-child(2) {
+            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+        }
+
+        .coverage-card:nth-child(3) {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .coverage-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .coverage-title {
+            font-size: 20px;
+            color: white;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .coverage-value {
+            font-size: 42px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .coverage-detail {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .data-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .data-section h2 {
+            color: #1e40af;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 10px;
+        }
+
+        .data-table th {
+            background: #1e40af;
+            color: white;
+            padding: 15px 12px;
+            text-align: center;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            border-bottom: 2px solid #1e40af;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .coverage-high {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .coverage-medium {
+            color: #d97706;
+            font-weight: bold;
+        }
+
+        .coverage-low {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .total-row {
+            background: #f8fafc;
+            font-weight: bold;
+        }
+
+        .total-row td {
+            border-top: 2px solid #1e40af;
+        }
+
+        .region-group td {
+            background: #f1f5f9;
+        }
+
+        @media (max-width: 768px) {
+            .coverage-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .data-table th[colspan] {
+            background: #2563eb;
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>视频会议终端部署情况看板</h1>
+        </div>
+
+        <div class="coverage-grid">
+            <div class="coverage-card">
+                <div class="coverage-title">省级覆盖率</div>
+                <div class="coverage-value">100%</div>
+                <div class="coverage-detail">
+                    终端数：126<br>
+                    会议室数：126
+                </div>
+            </div>
+
+            <div class="coverage-card">
+                <div class="coverage-title">市级覆盖率</div>
+                <div class="coverage-value">100%</div>
+                <div class="coverage-detail">
+                    终端数：647<br>
+                    会议室数：618
+                </div>
+            </div>
+
+            <div class="coverage-card">
+                <div class="coverage-title">县级覆盖率</div>
+                <div class="coverage-value">68.9%</div>
+                <div class="coverage-detail">
+                    硬件终端：1,922<br>
+                    软件终端：1,019<br>
+                    县分公司数：4,267
+                </div>
+            </div>
+        </div>
+
+        <div class="data-section">
+            <h2>各省份详细数据</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">省份</th>
+                            <th colspan="3">省级</th>
+                            <th colspan="3">市级</th>
+                            <th colspan="4">县级</th>
+                        </tr>
+                        <tr>
+                            <th>会议室数</th>
+                            <th>终端数</th>
+                            <th>覆盖率</th>
+                            <th>会议室数</th>
+                            <th>终端数</th>
+                            <th>覆盖率</th>
+                            <th>会议室数</th>
+                            <th>硬件终端</th>
+                            <th>软件终端</th>
+                            <th>覆盖率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>北京</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td class="coverage-high">100%</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>35</td>
+                            <td>0</td>
+                            <td>35</td>
+                            <td class="coverage-high">100%</td>
+                        </tr>
+                        <tr>
+                            <td>天津</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td class="coverage-high">100%</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>21</td>
+                            <td>25</td>
+                            <td>0</td>
+                            <td class="coverage-high">100%</td>
+                        </tr>
+                        <tr>
+                            <td>河北</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td class="coverage-high">100%</td>
+                            <td>14</td>
+                            <td>14</td>
+                            <td class="coverage-high">100%</td>
+                            <td>252</td>
+                            <td>0</td>
+                            <td>252</td>
+                            <td class="coverage-high">100%</td>
+                        </tr>
+                        <tr>
+                            <td>山西</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>18</td>
+                            <td>18</td>
+                            <td class="coverage-high">100%</td>
+                            <td>100</td>
+                            <td>100</td>
+                            <td>0</td>
+                            <td class="coverage-high">100%</td>
+                        </tr>
+                        <tr>
+                            <td>内蒙古</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>22</td>
+                            <td>22</td>
+                            <td class="coverage-high">100%</td>
+                            <td>113</td>
+                            <td>113</td>
+                            <td>0</td>
+                            <td class="coverage-medium">70.6%</td>
+                        </tr>
+                        <tr>
+                            <td>辽宁</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td class="coverage-high">100%</td>
+                            <td>26</td>
+                            <td>28</td>
+                            <td class="coverage-high">100%</td>
+                            <td>42</td>
+                            <td>42</td>
+                            <td>0</td>
+                            <td class="coverage-low">30.7%</td>
+                        </tr>
+                        <tr>
+                            <td>大连</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>19</td>
+                            <td>19</td>
+                            <td>0</td>
+                            <td class="coverage-high">100%</td>
+                        </tr>
+                        <tr>
+                            <td>吉林</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td class="coverage-high">100%</td>
+                            <td>16</td>
+                            <td>16</td>
+                            <td class="coverage-high">100%</td>
+                            <td>48</td>
+                            <td>48</td>
+                            <td>0</td>
+                            <td class="coverage-low">51.1%</td>
+                        </tr>
+                        <tr>
+                            <td>黑龙江</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>13</td>
+                            <td>13</td>
+                            <td class="coverage-high">100%</td>
+                            <td>153</td>
+                            <td>0</td>
+                            <td>160</td>
+                            <td class="coverage-medium">73.4%</td>
+                        </tr>
+                        <tr>
+                            <td>上海</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td class="coverage-high">100%</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>26</td>
+                            <td>26</td>
+                            <td>0</td>
+                            <td class="coverage-high">100%</td>
+                        </tr>
+                        <tr>
+                            <td>江苏</td>
+                            <td>8</td>
+                            <td>8</td>
+                            <td class="coverage-high">100%</td>
+                            <td>37</td>
+                            <td>34</td>
+                            <td class="coverage-medium">91.9%</td>
+                            <td>87</td>
+                            <td>87</td>
+                            <td>20</td>
+                            <td class="coverage-medium">60.5%</td>
+                        </tr>
+                        <tr>
+                            <td>浙江</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td class="coverage-high">100%</td>
+                            <td>25</td>
+                            <td>25</td>
+                            <td class="coverage-high">100%</td>
+                            <td>90</td>
+                            <td>90</td>
+                            <td>0</td>
+                            <td class="coverage-high">81.1%</td>
+                        </tr>
+                        <tr>
+                            <td>宁波</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td class="coverage-high">100%</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>16</td>
+                            <td>16</td>
+                            <td>0</td>
+                            <td class="coverage-high">80%</td>
+                        </tr>
+                        <tr>
+                            <td>安徽</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>18</td>
+                            <td>18</td>
+                            <td class="coverage-high">100%</td>
+                            <td>144</td>
+                            <td>2</td>
+                            <td>142</td>
+                            <td class="coverage-medium">73.09%</td>
+                        </tr>
+                        <tr>
+                            <td>福建</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td class="coverage-high">100%</td>
+                            <td>22</td>
+                            <td>21</td>
+                            <td class="coverage-medium">95.5%</td>
+                            <td>76</td>
+                            <td>79</td>
+                            <td>15</td>
+                            <td class="coverage-high">83.9%</td>
+                        </tr>
+                        <tr>
+                            <td>厦门</td>
+                            <td>6</td>
+                            <td>6</td>
+                            <td class="coverage-high">100%</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>6</td>
+                            <td>6</td>
+                            <td>0</td>
+                            <td class="coverage-low">46.2%</td>
+                        </tr>
+                        <tr>
+                            <td>江西</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>16</td>
+                            <td>16</td>
+                            <td class="coverage-high">100%</td>
+                            <td>125</td>
+                            <td>0</td>
+                            <td>125</td>
+                            <td class="coverage-high">82.2%</td>
+                        </tr>
+                        <tr>
+                            <td>山东</td>
+                            <td>6</td>
+                            <td>6</td>
+                            <td class="coverage-high">100%</td>
+                            <td>49</td>
+                            <td>49</td>
+                            <td class="coverage-high">100%</td>
+                            <td>172</td>
+                            <td>0</td>
+                            <td>172</td>
+                            <td class="coverage-medium">69.1%</td>
+                        </tr>
+                        <tr>
+                            <td>青岛</td>
+                            <td>6</td>
+                            <td>6</td>
+                            <td class="coverage-high">100%</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>12</td>
+                            <td>4</td>
+                            <td>12</td>
+                            <td class="coverage-high">100%</td>
+                        </tr>
+                        <tr>
+                            <td>河南</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td class="coverage-high">100%</td>
+                            <td>37</td>
+                            <td>35</td>
+                            <td class="coverage-medium">94.6%</td>
+                            <td>128</td>
+                            <td>128</td>
+                            <td>0</td>
+                            <td class="coverage-medium">58.4%</td>
+                        </tr>
+                        <tr>
+                            <td>湖北</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td class="coverage-high">100%</td>
+                            <td>37</td>
+                            <td>37</td>
+                            <td class="coverage-high">100%</td>
+                            <td>114</td>
+                            <td>114</td>
+                            <td>0</td>
+                            <td class="coverage-medium">66.3%</td>
+                        </tr>
+                        <tr>
+                            <td>湖南</td>
+                            <td>6</td>
+                            <td>6</td>
+                            <td class="coverage-high">100%</td>
+                            <td>31</td>
+                            <td>31</td>
+                            <td class="coverage-high">100%</td>
+                            <td>123</td>
+                            <td>123</td>
+                            <td>0</td>
+                            <td class="coverage-medium">58.9%</td>
+                        </tr>
+                        <tr>
+                            <td>广东</td>
+                            <td>7</td>
+                            <td>7</td>
+                            <td class="coverage-high">100%</td>
+                            <td>34</td>
+                            <td>41</td>
+                            <td class="coverage-high">100%</td>
+                            <td>20</td>
+                            <td>20</td>
+                            <td>0</td>
+                            <td class="coverage-low">8.1%</td>
+                        </tr>
+                        <tr>
+                            <td>深圳</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td class="coverage-high">100%</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>19</td>
+                            <td>19</td>
+                            <td>0</td>
+                            <td class="coverage-medium">76%</td>
+                        </tr>
+                        <tr>
+                            <td>广西</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>14</td>
+                            <td>14</td>
+                            <td class="coverage-high">100%</td>
+                            <td>6</td>
+                            <td>6</td>
+                            <td>107</td>
+                            <td class="coverage-medium">77.4%</td>
+                        </tr>
+                        <tr>
+                            <td>海南</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td class="coverage-high">100%</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td class="coverage-high">100%</td>
+                            <td>19</td>
+                            <td>19</td>
+                            <td>0</td>
+                            <td class="coverage-medium">57.6%</td>
+                        </tr>
+                        <tr>
+                            <td>重庆</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td class="coverage-high">100%</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>40</td>
+                            <td>21</td>
+                            <td>19</td>
+                            <td class="coverage-high">81.6%</td>
+                        </tr>
+                        <tr>
+                            <td>四川</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td class="coverage-high">100%</td>
+                            <td>44</td>
+                            <td>44</td>
+                            <td class="coverage-high">100%</td>
+                            <td>139</td>
+                            <td>137</td>
+                            <td>93</td>
+                            <td class="coverage-medium">74.7%</td>
+                        </tr>
+                        <tr>
+                            <td>贵州</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>19</td>
+                            <td>18</td>
+                            <td class="coverage-medium">94.7%</td>
+                            <td>96</td>
+                            <td>96</td>
+                            <td>8</td>
+                            <td class="coverage-high">85.2%</td>
+                        </tr>
+                        <tr>
+                            <td>云南</td>
+                            <td>6</td>
+                            <td>6</td>
+                            <td class="coverage-high">100%</td>
+                            <td>38</td>
+                            <td>38</td>
+                            <td class="coverage-high">100%</td>
+                            <td>134</td>
+                            <td>134</td>
+                            <td>0</td>
+                            <td class="coverage-high">100%</td>
+                        </tr>
+                        <tr>
+                            <td>西藏</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>8</td>
+                            <td>14</td>
+                            <td class="coverage-high">100%</td>
+                            <td>68</td>
+                            <td>68</td>
+                            <td>0</td>
+                            <td class="coverage-high">84%</td>
+                        </tr>
+                        <tr>
+                            <td>陕西</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>17</td>
+                            <td>33</td>
+                            <td class="coverage-high">100%</td>
+                            <td>123</td>
+                            <td>124</td>
+                            <td>1</td>
+                            <td class="coverage-medium">76.2%</td>
+                        </tr>
+                        <tr>
+                            <td>甘肃</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td class="coverage-high">100%</td>
+                            <td>26</td>
+                            <td>31</td>
+                            <td class="coverage-high">100%</td>
+                            <td>87</td>
+                            <td>87</td>
+                            <td>0</td>
+                            <td class="coverage-low">54.7%</td>
+                        </tr>
+                        <tr>
+                            <td>青海</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>9</td>
+                            <td>9</td>
+                            <td class="coverage-high">100%</td>
+                            <td>43</td>
+                            <td>43</td>
+                            <td>0</td>
+                            <td class="coverage-medium">79.6%</td>
+                        </tr>
+                        <tr>
+                            <td>宁夏</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td class="coverage-high">100%</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td class="coverage-high">100%</td>
+                            <td>23</td>
+                            <td>23</td>
+                            <td>0</td>
+                            <td class="coverage-medium">59%</td>
+                        </tr>
+                        <tr>
+                            <td>新疆</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td class="coverage-high">100%</td>
+                            <td>41</td>
+                            <td>41</td>
+                            <td class="coverage-high">100%</td>
+                            <td>97</td>
+                            <td>105</td>
+                            <td>0</td>
+                            <td class="coverage-low">53.8%</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>总计</td>
+                            <td>126</td>
+                            <td>126</td>
+                            <td class="coverage-high">100%</td>
+                            <td>618</td>
+                            <td>647</td>
+                            <td class="coverage-high">100%</td>
+                            <td>2,672</td>
+                            <td>1,922</td>
+                            <td>1,019</td>
+                            <td class="coverage-medium">68.9%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
